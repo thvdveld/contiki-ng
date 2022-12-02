@@ -43,3 +43,9 @@
 [submodule "arch/cpu/gecko/lib/gecko_sdk"]
 	path = arch/cpu/gecko/lib/gecko_sdk
 	url = https://github.com/SiliconLabs/gecko_sdk.git
+[submodule "os/services/wolfssl"]
+	path = os/services/wolfssl
+	url = git@github.com:wolfSSL/wolfssl.git
+[submodule "os/wolfssl/wolfssl"]
+	path = os/wolfssl/wolfssl
+	url = git@github.com:wolfSSL/wolfssl.git
