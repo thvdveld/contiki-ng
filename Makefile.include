@@ -330,7 +330,6 @@ MODULEDIRS = $(MODULES_REL) ${addprefix $(CONTIKI)/, $(MODULES)}
 UNIQUEMODULES = $(sort $(MODULEDIRS))
 MODULES_SOURCES = ${foreach d, $(UNIQUEMODULES), ${subst ${d}/,,${wildcard $(d)/*.c}}}
 
-$(info CONTIKI_NG_WOLFSSL_DIR: $(CONTIKI_NG_WOLFSSL_DIR))
 MODULES += $(CONTIKI_NG_WOLFSSL_DIR)
 
 # Include module-specific makefiles
