@@ -62,6 +62,8 @@
 #define NO_RC4
 #define NO_DES3
 
+#define WOLFSSL_AES_COUNTER
+
 #include <stdlib.h>
 #include "contiki-net.h"
 #include "sys/cc.h"

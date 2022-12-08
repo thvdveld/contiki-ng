@@ -35,23 +35,23 @@
 #include "contiki.h"
 #include "nordic_common.h"
 
-#include "sdk_config.h"
-#include "nrfx_gpiote.h"
 #include "nrf.h"
+#include "nrfx_gpiote.h"
+#include "sdk_config.h"
 
 #include "contiki-net.h"
+#include "dev/button-hal.h"
 #include "leds.h"
 #include "lib/sensors.h"
-#include "dev/button-hal.h"
 
 #include "dev/serial-line.h"
 #include "dev/uart0.h"
-#include "usb/usb-serial.h"
-#include "usb/usb-dfu-trigger.h"
 #include "lpm.h"
+#include "usb/usb-dfu-trigger.h"
+#include "usb/usb-serial.h"
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 
 /*---------------------------------------------------------------------------*/
@@ -63,9 +63,7 @@
 /* Nordic semi OUI */
 #define NORDIC_SEMI_VENDOR_OUI 0xF4CE36
 /*---------------------------------------------------------------------------*/
-static void
-populate_link_address(void)
-{
+static void populate_link_address(void) {
   uint8_t device_address[8];
   uint32_t device_address_low;
 
@@ -86,16 +84,27 @@ populate_link_address(void)
          LINKADDR_SIZE);
 }
 /*---------------------------------------------------------------------------*/
-void
-platform_init_stage_one(void)
-{
+void platform_init_stage_one(void) {
+  // We make sure that we don't enable the Access Port Protection
+
+    // UICR.APPROTECT = HwDisabled
+    if (*(int*)(0x10001208)  != 0x0000005a) {
+        /*nvmc.config.write(|w| w.wen().wen());*/
+        /*while nvmc.ready.read().ready().is_busy() {}*/
+        *(int*)(0x10001208) = 0x0000005a;
+        /*while nvmc.ready.read().ready().is_busy() {}*/
+        /*nvmc.config.reset();*/
+        /*while nvmc.ready.read().ready().is_busy() {}*/
+        /*cortex_m::peripheral::SCB::sys_reset();*/
+    }
+
+    // APPROTECT.DISABLE = SwDisabled
+    *(int *)(0x40000558) = 0x0000005a;
   gpio_hal_init();
   leds_init();
 }
 /*---------------------------------------------------------------------------*/
-void
-platform_init_stage_two(void)
-{
+void platform_init_stage_two(void) {
 #ifdef PLATFORM_HAS_BUTTON
   button_hal_init();
 #endif
@@ -126,17 +135,9 @@ platform_init_stage_two(void)
   populate_link_address();
 }
 /*---------------------------------------------------------------------------*/
-void
-platform_init_stage_three(void)
-{
-  process_start(&sensors_process, NULL);
-}
+void platform_init_stage_three(void) { process_start(&sensors_process, NULL); }
 /*---------------------------------------------------------------------------*/
-void
-platform_idle()
-{
-  lpm_drop();
-}
+void platform_idle() { lpm_drop(); }
 /*---------------------------------------------------------------------------*/
 /**
  * @}
