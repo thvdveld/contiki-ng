@@ -1,0 +1,6 @@
+Device NRF52840_XXAA
+SelectInterface SWD
+Speed 4000
+connect
+Erase
+Exit
